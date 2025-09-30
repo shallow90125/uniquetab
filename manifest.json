@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "UniqueTab",
   "version": "1.0.0",
-  "description": "ブックマークに登録されたサイトで同一URLのタブが複数開かれることを防ぐChrome拡張機能",
-  "permissions": ["tabs", "bookmarks", "storage"],
+  "description": "ピン留めされたタブと同一URLのタブが複数開かれることを防ぐChrome拡張機能",
+  "permissions": ["tabs", "storage"],
   "background": {
     "service_worker": "background.js",
     "type": "module"

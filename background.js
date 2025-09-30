@@ -1,6 +1,6 @@
 /**
  * UniqueTab - Service Worker
- * ブックマークに登録されたサイトで同一URLのタブが複数開かれることを防ぐ
+ * ピン留めされたタブと同一URLのタブが複数開かれることを防ぐ
  */
 
 // ログユーティリティ
@@ -20,7 +20,7 @@ class Logger {
 
 // サービスクラスをインポート（ES Modules構文を使用）
 import "./services/SettingsService.js";
-import "./services/BookmarkService.js";
+import "./services/PinnedTabService.js";
 import "./services/TabManager.js";
 
 // グローバルインスタンス
@@ -36,14 +36,8 @@ async function initializeServices() {
     // 設定サービスを初期化
     await self.settingsService.initialize();
 
-    // ブックマークサービスを初期化
-    await self.bookmarkService.initialize();
-
     // タブマネージャーを初期化
-    tabManager = new self.TabManager(
-      self.bookmarkService,
-      self.settingsService
-    );
+    tabManager = new self.TabManager(self.settingsService);
 
     Logger.info("All services initialized successfully");
   } catch (error) {

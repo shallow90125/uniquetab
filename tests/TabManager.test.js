@@ -14,7 +14,7 @@ const tabManagerCode = fs.readFileSync(
 describe("TabManager", () => {
   let TabManager;
   let tabManager;
-  let mockBookmarkService;
+  let mockPinnedTabService;
   let mockSettingsService;
   let Logger;
 
@@ -29,9 +29,15 @@ describe("TabManager", () => {
     };
     global.Logger = Logger;
 
-    // BookmarkService のモック
-    mockBookmarkService = {
-      isUrlBookmarked: jest.fn(),
+    // PinnedTabService のモック
+    mockPinnedTabService = {
+      findPinnedTabByUrl: jest.fn(),
+      initialize: jest.fn().mockResolvedValue(),
+    };
+
+    // self.pinnedTabService をモック
+    global.self = {
+      pinnedTabService: mockPinnedTabService,
     };
 
     // SettingsService のモック
@@ -42,43 +48,35 @@ describe("TabManager", () => {
 
     // TabManager クラスを評価
     eval(tabManagerCode);
-    tabManager = new TabManager(mockBookmarkService, mockSettingsService);
+    tabManager = new TabManager(mockSettingsService);
   });
 
-  describe("findExistingTab", () => {
-    it("同じURLを持つ既存タブを見つける", async () => {
-      const mockTabs = [
-        { id: 1, url: "https://example.com" },
-        { id: 2, url: "https://test.com" },
-        { id: 3, url: "https://example.com" },
-      ];
-      chrome.tabs.query.mockResolvedValue(mockTabs);
+  describe("findPinnedTab", () => {
+    it("同じURLを持つピン留めタブを見つける", async () => {
+      const mockPinnedTab = { id: 1, url: "https://example.com", windowId: 1 };
+      mockPinnedTabService.findPinnedTabByUrl.mockResolvedValue(mockPinnedTab);
 
-      const result = await tabManager.findExistingTab("https://example.com", 3);
+      const result = await tabManager.findPinnedTab("https://example.com", 3);
 
-      expect(result).toEqual({ id: 1, url: "https://example.com" });
+      expect(result).toEqual(mockPinnedTab);
+      expect(mockPinnedTabService.findPinnedTabByUrl).toHaveBeenCalledWith(
+        "https://example.com"
+      );
     });
 
-    it("既存タブが見つからない場合はnullを返す", async () => {
-      const mockTabs = [
-        { id: 1, url: "https://example.com" },
-        { id: 2, url: "https://test.com" },
-      ];
-      chrome.tabs.query.mockResolvedValue(mockTabs);
+    it("ピン留めタブが見つからない場合はnullを返す", async () => {
+      mockPinnedTabService.findPinnedTabByUrl.mockResolvedValue(null);
 
-      const result = await tabManager.findExistingTab(
-        "https://notfound.com",
-        3
-      );
+      const result = await tabManager.findPinnedTab("https://notfound.com", 3);
 
       expect(result).toBeNull();
     });
 
     it("自分自身のタブは除外する", async () => {
-      const mockTabs = [{ id: 1, url: "https://example.com" }];
-      chrome.tabs.query.mockResolvedValue(mockTabs);
+      const mockPinnedTab = { id: 1, url: "https://example.com", windowId: 1 };
+      mockPinnedTabService.findPinnedTabByUrl.mockResolvedValue(mockPinnedTab);
 
-      const result = await tabManager.findExistingTab("https://example.com", 1);
+      const result = await tabManager.findPinnedTab("https://example.com", 1);
 
       expect(result).toBeNull();
     });
@@ -90,24 +88,23 @@ describe("TabManager", () => {
 
       await tabManager.processTabUrl(1, "https://example.com");
 
-      expect(mockBookmarkService.isUrlBookmarked).not.toHaveBeenCalled();
+      expect(mockPinnedTabService.findPinnedTabByUrl).not.toHaveBeenCalled();
     });
 
-    it("ブックマークされていないURLは処理をスキップ", async () => {
+    it("ピン留めタブが存在しない場合は処理をスキップ", async () => {
       mockSettingsService.isEnabled.mockResolvedValue(true);
-      mockBookmarkService.isUrlBookmarked.mockResolvedValue(false);
+      mockPinnedTabService.findPinnedTabByUrl.mockResolvedValue(null);
 
       await tabManager.processTabUrl(1, "https://example.com");
 
-      expect(chrome.tabs.query).not.toHaveBeenCalled();
+      expect(chrome.tabs.update).not.toHaveBeenCalled();
     });
 
-    it("既存タブが存在する場合はタブを統合する", async () => {
+    it("ピン留めタブが存在する場合はタブを統合する", async () => {
       mockSettingsService.isEnabled.mockResolvedValue(true);
-      mockBookmarkService.isUrlBookmarked.mockResolvedValue(true);
+      const mockPinnedTab = { id: 2, url: "https://example.com", windowId: 1 };
+      mockPinnedTabService.findPinnedTabByUrl.mockResolvedValue(mockPinnedTab);
 
-      const mockTabs = [{ id: 2, url: "https://example.com", windowId: 1 }];
-      chrome.tabs.query.mockResolvedValue(mockTabs);
       chrome.tabs.get.mockResolvedValue({ id: 2, windowId: 1 });
       chrome.tabs.update.mockResolvedValue({});
       chrome.windows.update.mockResolvedValue({});
@@ -178,11 +175,11 @@ describe("TabManager", () => {
 
     it("有効なURLの場合は処理を実行", async () => {
       mockSettingsService.isEnabled.mockResolvedValue(true);
-      mockBookmarkService.isUrlBookmarked.mockResolvedValue(false);
+      mockPinnedTabService.findPinnedTabByUrl.mockResolvedValue(null);
 
       await tabManager.handleTabCreated({ id: 1, url: "https://example.com" });
 
-      expect(mockBookmarkService.isUrlBookmarked).toHaveBeenCalledWith(
+      expect(mockPinnedTabService.findPinnedTabByUrl).toHaveBeenCalledWith(
         "https://example.com"
       );
     });
