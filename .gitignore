@@ -1,0 +1,27 @@
+# .gitignore
+
+# Node modules
+node_modules/
+
+# Test coverage
+coverage/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Build artifacts
+dist/
+*.zip
+
+# Development files
+.kiro/
+
+# npm
+package-lock.json
