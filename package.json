@@ -1,29 +1,45 @@
 {
-  "name": "uniquetab",
-  "version": "1.0.0",
-  "description": "ブックマークに登録されたサイトで同一URLのタブが複数開かれることを防ぐChrome拡張機能",
-  "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
-  },
-  "devDependencies": {
-    "@types/chrome": "^0.0.246",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "setupFiles": [
-      "./tests/setup.js"
-    ],
-    "collectCoverageFrom": [
-      "services/**/*.js",
-      "background.js",
-      "popup.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ]
-  }
+	"name": "uniquetab",
+	"version": "2.0.0",
+	"private": true,
+	"description": "ピン留めされたタブと同一 URL のタブが複数開かれることを防ぐブラウザ拡張機能",
+	"type": "module",
+	"scripts": {
+		"dev": "wxt",
+		"dev:firefox": "wxt -b firefox",
+		"build": "wxt build",
+		"build:firefox": "wxt build -b firefox",
+		"zip": "wxt zip",
+		"zip:firefox": "wxt zip -b firefox",
+		"compile": "tsc --noEmit",
+		"postinstall": "wxt prepare",
+		"lint": "oxlint",
+		"lint:fix": "oxlint --fix",
+		"fmt": "oxfmt",
+		"fmt:check": "oxfmt --check",
+		"test": "vitest run",
+		"prepare": "husky || true"
+	},
+	"dependencies": {
+		"neverthrow": "^8.2.0",
+		"solid-js": "^1.9.11"
+	},
+	"devDependencies": {
+		"@wxt-dev/module-solid": "^1.1.4",
+		"happy-dom": "^20.9.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^17.0.5",
+		"oxfmt": "^0.52.0",
+		"oxlint": "^1.67.0",
+		"oxlint-tsgolint": "^0.23.0",
+		"typescript": "^5.9.3",
+		"vitest": "^4.1.7",
+		"wxt": "^0.20.26"
+	},
+	"lint-staged": {
+		"*.@(js|ts|tsx|md|yaml|yml)": [
+			"bun run lint:fix",
+			"bun run fmt"
+		]
+	}
 }
