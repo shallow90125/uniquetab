@@ -3,6 +3,6 @@
 	"compilerOptions": {
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
-		"types": ["vitest/importMeta"]
+		"types": ["vitest/importMeta", "vitest/globals"]
 	}
 }

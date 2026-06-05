@@ -1,8 +1,8 @@
 {
-	"name": "wxt-solid-starter",
-	"version": "0.0.0",
+	"name": "uniquetab",
+	"version": "2.0.0",
 	"private": true,
-	"description": "manifest.json description",
+	"description": "ピン留めされたタブと同一 URL のタブが複数開かれることを防ぐブラウザ拡張機能",
 	"type": "module",
 	"scripts": {
 		"dev": "wxt",
@@ -21,10 +21,12 @@
 		"prepare": "husky || true"
 	},
 	"dependencies": {
+		"neverthrow": "^8.2.0",
 		"solid-js": "^1.9.11"
 	},
 	"devDependencies": {
 		"@wxt-dev/module-solid": "^1.1.4",
+		"happy-dom": "^20.9.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^17.0.5",
 		"oxfmt": "^0.52.0",
