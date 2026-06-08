@@ -37,9 +37,9 @@
     "wxt": "^0.20.26"
   },
   "lint-staged": {
-    "*.@(js|ts|tsx|md|yaml|yml)": [
-      "bun run lint:fix",
-      "bun run fmt"
+    "*": [
+      "oxlint --fix --no-error-on-unmatched-pattern",
+      "oxfmt --no-error-on-unmatched-pattern"
     ]
   }
 }
