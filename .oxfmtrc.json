@@ -1,8 +1,18 @@
 {
-	"$schema": "./node_modules/oxfmt/configuration_schema.json",
-	"ignorePatterns": ["v1/**"],
-	"semi": false,
-	"singleQuote": true,
-	"trailingComma": "all",
-	"useTabs": true
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [],
+
+  // https://github.com/honojs/hono/blob/main/.prettierrc
+  "printWidth": 100,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "semi": false,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "endOfLine": "lf",
+
+  // sort
+  "sortImports": true,
+  "sortPackageJson": true,
+  "sortTailwindcss": true
 }

@@ -1,20 +1,20 @@
 {
-	"$schema": "./node_modules/oxlint/configuration_schema.json",
-	"ignorePatterns": ["v1/**"],
-	"plugins": ["typescript", "unicorn", "oxc"],
-	"categories": {
-		"correctness": "error"
-	},
-	"rules": {
-		"sort-imports": "error",
-		"sort-keys": "error",
-		"sort-vars": "error"
-	},
-	"env": {
-		"builtin": true
-	},
-	"options": {
-		"typeAware": true,
-		"typeCheck": true
-	}
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    // import順はautofixできないのでoxfmtに任せる
+    "sort-imports": ["error", { "ignoreDeclarationSort": true }],
+    "sort-keys": "error",
+    "sort-vars": "error"
+  },
+  "env": {
+    "builtin": true
+  },
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  }
 }
