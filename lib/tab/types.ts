@@ -8,16 +8,16 @@ export type TabOpError = 'tab-not-found' | 'timeout' | 'unknown'
  * 双方から構造的に代入可能にするため、使用するフィールドのみに絞っている。
  */
 export type TabSnapshot = {
-	id?: number
-	pinned: boolean
-	title?: string
-	url?: string
-	windowId?: number
+  id?: number
+  pinned: boolean
+  title?: string
+  url?: string
+  windowId?: number
 }
 
 /** `onUpdated` の変更情報のうち判定・反映に使う最小限のフィールド */
 export type TabChangeInfo = {
-	pinned?: boolean
-	status?: string
-	url?: string
+  pinned?: boolean
+  status?: string
+  url?: string
 }

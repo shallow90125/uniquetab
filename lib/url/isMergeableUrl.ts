@@ -10,30 +10,30 @@ import { isInternalUrl } from './isInternalUrl'
  * @returns 統合対象になりうる場合 true
  */
 export function isMergeableUrl(url: string): boolean {
-	if (!url || url === 'chrome://newtab/' || url === 'about:blank') {
-		return false
-	}
-	return !isInternalUrl(url)
+  if (!url || url === 'chrome://newtab/' || url === 'about:blank') {
+    return false
+  }
+  return !isInternalUrl(url)
 }
 
 if (import.meta.vitest) {
-	const { describe, expect, it } = import.meta.vitest
-	describe('isMergeableUrl', () => {
-		it.each([
-			'',
-			'chrome://newtab/',
-			'about:blank',
-			'chrome://settings',
-			'moz-extension://abc/page.html',
-		])('対象外の URL を false と判定する: %s', (url) => {
-			expect(isMergeableUrl(url)).toBe(false)
-		})
+  const { describe, expect, it } = import.meta.vitest
+  describe('isMergeableUrl', () => {
+    it.each([
+      '',
+      'chrome://newtab/',
+      'about:blank',
+      'chrome://settings',
+      'moz-extension://abc/page.html',
+    ])('対象外の URL を false と判定する: %s', (url) => {
+      expect(isMergeableUrl(url)).toBe(false)
+    })
 
-		it.each(['https://example.com', 'http://example.com/path'])(
-			'通常 URL を true と判定する: %s',
-			(url) => {
-				expect(isMergeableUrl(url)).toBe(true)
-			},
-		)
-	})
+    it.each(['https://example.com', 'http://example.com/path'])(
+      '通常 URL を true と判定する: %s',
+      (url) => {
+        expect(isMergeableUrl(url)).toBe(true)
+      }
+    )
+  })
 }
